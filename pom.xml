@@ -12,6 +12,11 @@
     <modules>
         <module>gulimall-core</module>
         <module>gulimall-admin</module>
+        <module>gulimall-oms</module>
+        <module>gulimall-sms</module>
+        <module>gulimall-wms</module>
+        <module>gulimall-pms</module>
+        <module>gulimall-ums</module>
     </modules>
 
 
