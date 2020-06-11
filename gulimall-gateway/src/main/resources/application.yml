@@ -1,0 +1,59 @@
+server:
+  port: 88
+
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: pms_route
+          uri: lb://gulimall-pms
+          predicates:
+            - Path=/pms/**        #访问localhost:88/pms/**时会跳转至gulimall-pms对应的IP：/pms/**
+
+        - id: gulimall-oms_route
+          uri: lb://gulimall-oms
+          predicates:
+            - Path=/oms/**
+
+        - id: gulimall-sms_route
+          uri: lb://gulimall-sms
+          predicates:
+            - Path=/sms/**
+
+        - id: gulimall-ums_route
+          uri: lb://gulimall-ums
+          predicates:
+            - Path=/ums/**
+
+        - id: gulimall-wms_route
+          uri: lb://gulimall-wms
+          predicates:
+            - Path=/wms/**
+
+
+
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#              allowedOrigins: "*"   开发时先限制所有IP都能跨域，上线后用上线的前端项目IP
+#              allowedMethods:
+#                - GET
+#                - POST
+#                - DELETE
+#                - PUT
+#                - OPTIONS
+#                - HEAD
+#              allowCredentials: true # \u5141\u8BB8\u643A\u5E26\u81EA\u5B9A\u4E49cookie\u8DE8\u57DF  允许携带自定义cookie跨域
+
+
+#      - id: world_route
+#        uri: lb://gulimall-pms
+#        predicates:
+#          - Path=/world
+#      - id: hello_route
+#        uri: lb://gulimall-oms
+#        predicates:
+#          - Path=/hello
+#        filters:
+#          - AddResponseHeader=leifengyang,666

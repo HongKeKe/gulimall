@@ -1,14 +1,24 @@
 package com.atguigu.gulimall.pms.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
 import com.atguigu.gulimall.commons.bean.PageVo;
 import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.commons.bean.Resp;
+import com.atguigu.gulimall.pms.entity.AttrAttrgroupRelationEntity;
+import com.atguigu.gulimall.pms.entity.AttrGroupEntity;
+import com.atguigu.gulimall.pms.service.AttrAttrgroupRelationService;
+import com.atguigu.gulimall.pms.service.AttrGroupService;
+import com.atguigu.gulimall.pms.vo.AttrGroupWithAttrsVo;
+import com.atguigu.gulimall.pms.vo.AttrSaveVo;
+import com.atguigu.gulimall.pms.vo.AttrWithGroupVo;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +43,34 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+    @Autowired
+    private AttrGroupService attrGroupService;
+    ///pms/attr/sale/{catId}
+    @ApiOperation("查询某个分类下对应的所有销售属性")
+    @GetMapping("/sale/{catId}")
+    public Resp<PageVo> getCatelogSaleAttrs(
+            @PathVariable("catId") Long catId,
+            QueryCondition queryCondition) {
+
+
+        PageVo pageVo = attrService.queryPageCatelogBaseAttrs(queryCondition, catId,1);
+
+        return Resp.ok(pageVo);
+    }
+
+    ///pms/attr/base/{catId}
+    @ApiOperation("查询某个分类下对应的所有基本属性")
+    @GetMapping("/base/{catId}")
+    public Resp<PageVo> getCatelogBaseAttrs(
+            @PathVariable("catId") Long catId,
+            QueryCondition queryCondition) {
+
+
+        PageVo pageVo = attrService.queryPageCatelogBaseAttrs(queryCondition, catId,0);
+
+        return Resp.ok(pageVo);
+    }
+
     /**
      * 列表
      */
@@ -52,10 +90,14 @@ public class AttrController {
     @ApiOperation("详情查询")
     @GetMapping("/info/{attrId}")
     @PreAuthorize("hasAuthority('pms:attr:info')")
-    public Resp<AttrEntity> info(@PathVariable("attrId") Long attrId){
+    public Resp<AttrWithGroupVo> info(@PathVariable("attrId") Long attrId){
+        AttrWithGroupVo attrGroupWithAttrsVo = new AttrWithGroupVo();
 		AttrEntity attr = attrService.getById(attrId);
+        BeanUtils.copyProperties(attr,attrGroupWithAttrsVo);
 
-        return Resp.ok(attr);
+        AttrGroupEntity attrGroup = attrGroupService.getGroupByAttrId(attrId);
+        attrGroupWithAttrsVo.setGroup(attrGroup);
+        return Resp.ok(attrGroupWithAttrsVo);
     }
 
     /**
@@ -64,8 +106,8 @@ public class AttrController {
     @ApiOperation("保存")
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('pms:attr:save')")
-    public Resp<Object> save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public Resp<Object> save(@RequestBody AttrSaveVo attr){
+		attrService.saveAttrAndRelation(attr);
 
         return Resp.ok(null);
     }

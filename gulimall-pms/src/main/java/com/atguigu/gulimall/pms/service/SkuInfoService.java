@@ -16,5 +16,7 @@ import com.atguigu.gulimall.commons.bean.QueryCondition;
 public interface SkuInfoService extends IService<SkuInfoEntity> {
 
     PageVo queryPage(QueryCondition params);
+
+
 }
 

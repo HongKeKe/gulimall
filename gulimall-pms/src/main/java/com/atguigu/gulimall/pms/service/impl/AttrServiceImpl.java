@@ -1,5 +1,11 @@
 package com.atguigu.gulimall.pms.service.impl;
 
+import com.atguigu.gulimall.pms.dao.AttrAttrgroupRelationDao;
+import com.atguigu.gulimall.pms.entity.AttrAttrgroupRelationEntity;
+import com.atguigu.gulimall.pms.entity.AttrGroupEntity;
+import com.atguigu.gulimall.pms.vo.AttrSaveVo;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -12,10 +18,14 @@ import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.pms.dao.AttrDao;
 import com.atguigu.gulimall.pms.entity.AttrEntity;
 import com.atguigu.gulimall.pms.service.AttrService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("attrService")
 public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements AttrService {
+
+    @Autowired
+    AttrAttrgroupRelationDao relationDao;
 
     @Override
     public PageVo queryPage(QueryCondition params) {
@@ -25,6 +35,37 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         );
 
         return new PageVo(page);
+    }
+
+    @Override
+    public PageVo queryPageCatelogBaseAttrs(QueryCondition queryCondition, Long catId,Integer attrType) {
+
+        //1、获取封装的分页条件
+        IPage<AttrEntity> page = new Query<AttrEntity>().getPage(queryCondition);
+
+        //2、获取查询条件
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>()
+                .eq("catelog_id", catId)
+                .eq("attr_type",attrType);
+
+        IPage<AttrEntity> data = this.page(page, wrapper);
+
+        return new PageVo(data);
+    }
+
+    @Transactional
+    @Override
+    public void saveAttrAndRelation(AttrSaveVo attr) {
+        AttrEntity attrEntity = new AttrEntity();
+        BeanUtils.copyProperties(attr,attrEntity);
+        baseMapper.insert(attrEntity);
+
+        Long attrId = attrEntity.getAttrId();
+        Long attrGroupId = attr.getAttrGroupId();
+        AttrAttrgroupRelationEntity entity = new AttrAttrgroupRelationEntity();
+        entity.setAttrGroupId(attrGroupId);
+        entity.setAttrId(attrId);
+        relationDao.insert(entity);
     }
 
 }
