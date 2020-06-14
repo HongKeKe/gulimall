@@ -34,5 +34,8 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     void saveSkuInfos(Long spuId, List<SkuVo> skus);
 
+    void updateSpuStatus(Long spuId, Integer status);
+
+
 }
 

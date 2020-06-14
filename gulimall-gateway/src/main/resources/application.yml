@@ -9,8 +9,13 @@ spring:
         - id: pms_route
           uri: lb://gulimall-pms
           predicates:
-            - Path=/pms/**        #访问localhost:88/pms/**时会跳转至gulimall-pms对应的IP：/pms/**
-
+            - Path=/pms/**,/api/index/**,/api/item/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+#            - name: Hystrix
+#              args:
+#                  name: fallbackcmd
+#                  fallbackUri: forward:/incaseoffailureusethis
         - id: gulimall-oms_route
           uri: lb://gulimall-oms
           predicates:
@@ -24,19 +29,39 @@ spring:
         - id: gulimall-ums_route
           uri: lb://gulimall-ums
           predicates:
-            - Path=/ums/**
+            - Path=/ums/**,/api/ums/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
         - id: gulimall-wms_route
           uri: lb://gulimall-wms
           predicates:
             - Path=/wms/**
+        - id: gulimall-search_route
+          uri: lb://gulimall-search
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}     #本来访问/api/search/**会跳转至URI:path，加了过滤器，在跳转至URI之前会把/api/去掉只留下后面，变成gulimall-search:{segment}
 
 
+        - id: gulimall_cart_route
+          uri: lb://gulimall-cart
+          predicates:
+            - Path=/api/cart/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
+        - id: gulimall_order_route
+          uri: lb://gulimall-order
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
 #      globalcors:
 #        cors-configurations:
 #          '[/**]':
-#              allowedOrigins: "*"   开发时先限制所有IP都能跨域，上线后用上线的前端项目IP
+#              allowedOrigins: "*"
 #              allowedMethods:
 #                - GET
 #                - POST
@@ -44,7 +69,7 @@ spring:
 #                - PUT
 #                - OPTIONS
 #                - HEAD
-#              allowCredentials: true # \u5141\u8BB8\u643A\u5E26\u81EA\u5B9A\u4E49cookie\u8DE8\u57DF  允许携带自定义cookie跨域
+#              allowCredentials: true # \u5141\u8BB8\u643A\u5E26\u81EA\u5B9A\u4E49cookie\u8DE8\u57DF
 
 
 #      - id: world_route

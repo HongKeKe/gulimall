@@ -7,12 +7,13 @@
 - 模块划分说明
     1. 后台系统&端口规划
         - 后台管理系统【8080】
-        - 商品系统【10000】
+        - 商品系统【1000】
         - 优惠券/积分系统【11000】
         - 订单系统【12000】
         - 库存系统【13000】
         - 用户系统【14000】
         - 物流系统【15000】
+        - 检索系统【16000】
         - 网关【88】
     
     2. 前台系统
@@ -35,10 +36,11 @@
 | Nacos                  | 注册中心             | https://nacos.io/zh-cn/docs/quick-start.html |
 | SpringCloud Gateway    | 微服务网关           |                                              |
 | SpringBoot Admin       | 微服务监控           |                                              |
-| SkyWalking             | 服务追踪             |                                              |
+| SpringCloud Alibaba Sentinel   | 服务监控-追踪-降级-限流    |                                              |
 | HikariCP               | 数据源               | https://www.jianshu.com/p/15b846107a7c       |
 | SpringBoot Email       | 邮件功能             |                                              |
-| sharding-jdbc          | 分库分表             |                                              |
+| sharding-jdbc         | 分库分表             |                                              |
+| SpringCloud Alibaba Seata    | 分布式事务           |                                              |
 | elastic-job            | 分布式调度           |                                              |
 | Redis                  | 分布式缓存           |                                              |
 | Redisson               | 分布式锁，分布式集合 |                                              |
@@ -92,7 +94,7 @@
 
 #### 使用说明
 
-1. xxxx
+1. 前端项目地址： https://github.com/leifengyang/guli_shop/tree/chh
 2. xxxx
 3. xxxx
 

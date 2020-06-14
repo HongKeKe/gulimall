@@ -1,5 +1,9 @@
 package com.atguigu.gulimall.pms.service.impl;
 
+import com.atguigu.gulimall.commons.bean.Constant;
+import com.atguigu.gulimall.pms.annotation.GuliCache;
+import com.atguigu.gulimall.pms.vo.CategoryWithChildrensVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +20,12 @@ import com.atguigu.gulimall.pms.dao.CategoryDao;
 import com.atguigu.gulimall.pms.entity.CategoryEntity;
 import com.atguigu.gulimall.pms.service.CategoryService;
 
-
+@Slf4j
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
 
-
+    @Autowired
+    CategoryDao categoryDao;
 
     @Override
     public PageVo queryPage(QueryCondition params) {
@@ -52,5 +57,43 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         return entities;
     }
+
+    /**
+     * 可以编写一个Filter；或者
+     * 利用AOP原理
+     *
+     * key； 前缀+id
+     * product:1
+     * catelog:1
+     * @param id
+     * @return
+     */
+    //@Cache(key="")
+    @Override
+    @GuliCache(prefix = Constant.CACHE_CATELOG)
+    public List<CategoryWithChildrensVo> getCategoryChildrensAndSubsById(Integer id) {
+        log.info("目标方法运行");
+        System.out.println("service---线程..."+Thread.currentThread().getId());
+        List<CategoryWithChildrensVo> vos = categoryDao.selectCategoryChildrenWithChildrens(id);
+        /**
+         * 1、缓存穿透：null值缓存，设置短暂的过期时间
+         * 2、缓存雪崩：过期时间+随机值
+         * 3、缓存击穿：分布式锁
+         */
+//        String s = redisTemplate.opsForValue().get(Constant.CACHE_CATELOG);
+//        if(!StringUtils.isEmpty(s)){
+//            log.info("菜单数据缓存命中...");
+//            vos = JSON.parseArray(s, CategoryWithChildrensVo.class);
+//        }else {
+//            //1、缓存中没有，查数据库
+//            log.info("菜单数据缓存没命中...正在查询数据库");
+//            vos = categoryDao.selectCategoryChildrenWithChildrens(id);
+//            //2、放到缓存中
+//            redisTemplate.opsForValue().set(Constant.CACHE_CATELOG,JSON.toJSONString(vos)); //转成JSON字符串
+//        }
+
+        return vos;
+    }
+
 
 }
