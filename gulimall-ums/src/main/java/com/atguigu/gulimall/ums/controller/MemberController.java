@@ -7,6 +7,13 @@ import java.util.Map;
 import com.atguigu.gulimall.commons.bean.PageVo;
 import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.commons.bean.Resp;
+import com.atguigu.gulimall.commons.exception.EmailExistException;
+import com.atguigu.gulimall.commons.exception.PhoneExistException;
+import com.atguigu.gulimall.commons.exception.UsernameExistException;
+import com.atguigu.gulimall.ums.vo.MemberLoginVo;
+import com.atguigu.gulimall.ums.vo.MemberRegistVo;
+import com.atguigu.gulimall.ums.vo.MemberRespVo;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +29,9 @@ import com.atguigu.gulimall.ums.service.MemberService;
 /**
  * 会员
  *
- * @author hongweijie
- * @email 995765791@qq.com
- * @date 2020-06-10 18:12:03
+ * @author leifengyang
+ * @email lfy@atguigu.com
+ * @date 2019-08-01 20:38:09
  */
 @Api(tags = "会员 管理")
 @RestController
@@ -32,6 +39,36 @@ import com.atguigu.gulimall.ums.service.MemberService;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @ApiOperation("用户登录")
+    @PostMapping("/login")
+    public Resp<Object> login(MemberLoginVo vo){
+
+
+        MemberRespVo respVo = memberService.login(vo);
+
+        return Resp.ok(respVo);
+    }
+
+
+
+    @ApiOperation("用户注册")
+    @PostMapping("/regist")
+    public Resp<Object> register(MemberRegistVo vo) throws MySQLIntegrityConstraintViolationException {
+
+        Resp<Object> fail = Resp.fail(null);
+        try {
+            memberService.registerUser(vo);
+
+        } catch (Exception pe){
+            fail.setMsg(pe.getMessage());
+            return fail;
+        }
+
+        return Resp.ok(null);
+    }
+
+
 
     /**
      * 列表
@@ -53,7 +90,7 @@ public class MemberController {
     @GetMapping("/info/{id}")
     @PreAuthorize("hasAuthority('ums:member:info')")
     public Resp<MemberEntity> info(@PathVariable("id") Long id){
-		MemberEntity member = memberService.getById(id);
+        MemberEntity member = memberService.getById(id);
 
         return Resp.ok(member);
     }
@@ -65,7 +102,7 @@ public class MemberController {
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('ums:member:save')")
     public Resp<Object> save(@RequestBody MemberEntity member){
-		memberService.save(member);
+        memberService.save(member);
 
         return Resp.ok(null);
     }
@@ -77,7 +114,7 @@ public class MemberController {
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('ums:member:update')")
     public Resp<Object> update(@RequestBody MemberEntity member){
-		memberService.updateById(member);
+        memberService.updateById(member);
 
         return Resp.ok(null);
     }
@@ -89,7 +126,7 @@ public class MemberController {
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('ums:member:delete')")
     public Resp<Object> delete(@RequestBody Long[] ids){
-		memberService.removeByIds(Arrays.asList(ids));
+        memberService.removeByIds(Arrays.asList(ids));
 
         return Resp.ok(null);
     }

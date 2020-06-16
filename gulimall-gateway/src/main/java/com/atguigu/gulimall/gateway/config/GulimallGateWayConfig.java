@@ -1,10 +1,13 @@
 package com.atguigu.gulimall.gateway.config;
 
+import com.atguigu.gulimall.gateway.filter.GuliAutheticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
 
 @Configuration
 public class GulimallGateWayConfig {
@@ -34,4 +37,16 @@ public class GulimallGateWayConfig {
 
         return filter;
     }
+
+
+    /**
+     * 全局过滤器或者gatewayfilterfactory都是在容器中添加的时候有序的。
+     *
+     * 如果我们的过滤器顺序太低，导致上一个放行不过就来不到这里。
+     * @return
+     */
+//
+
+
+
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.atguigu.gulimall.commons.bean.PageVo;
 import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.commons.bean.Resp;
+import com.atguigu.gulimall.commons.to.SkuInfoVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,16 @@ import com.atguigu.gulimall.pms.service.SkuInfoService;
 public class SkuInfoController {
     @Autowired
     private SkuInfoService skuInfoService;
+
+    @GetMapping("/cart/{skuId}")
+    public Resp<SkuInfoVo> getSKuInfoForCart(@PathVariable("skuId") Long skuId){
+
+        //读锁
+        SkuInfoVo vo =  skuInfoService.getSkuVo(skuId);
+
+        return Resp.ok(vo);
+
+    }
 
     ///pms/skuinfo/list/spu/{spuId}
     @ApiOperation("根据商品的id（spuId）查出所有的sku信息")
