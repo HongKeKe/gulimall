@@ -22,9 +22,9 @@ import com.atguigu.gulimall.oms.service.RefundInfoService;
 /**
  * 退款信息
  *
- * @author hongweijie
- * @email 995765791@qq.com
- * @date 2020-06-10 17:34:34
+ * @author leifengyang
+ * @email lfy@atguigu.com
+ * @date 2019-08-01 20:33:14
  */
 @Api(tags = "退款信息 管理")
 @RestController

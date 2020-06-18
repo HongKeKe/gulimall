@@ -7,6 +7,9 @@ import java.util.Map;
 import com.atguigu.gulimall.commons.bean.PageVo;
 import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.commons.bean.Resp;
+import com.atguigu.gulimall.commons.to.order.OrderVo;
+import com.atguigu.gulimall.oms.vo.CartVo;
+import com.atguigu.gulimall.oms.vo.OrderSubmitVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +25,9 @@ import com.atguigu.gulimall.oms.service.OrderService;
 /**
  * 订单
  *
- * @author hongweijie
- * @email 995765791@qq.com
- * @date 2020-06-10 17:34:34
+ * @author leifengyang
+ * @email lfy@atguigu.com
+ * @date 2019-08-01 20:33:14
  */
 @Api(tags = "订单 管理")
 @RestController
@@ -32,6 +35,30 @@ import com.atguigu.gulimall.oms.service.OrderService;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
+    @PostMapping("/payed")
+    public Resp<Object> updatePayed(@RequestBody OrderEntity order){
+        orderService.payedOrder(order);
+
+        return Resp.ok(null);
+    }
+
+    @GetMapping("/bysn/{orderSn}")
+    public Resp<OrderVo> getOrderInfo(@PathVariable("orderSn") String orderSn){
+
+        OrderVo orderVo = orderService.getOrderInfoByOrderSn(orderSn);
+        return Resp.ok(orderVo);
+    }
+
+
+    @PostMapping("/createAndSave")
+    public Resp<OrderEntity> createAndSaveOrder(@RequestBody OrderSubmitVo vo){
+
+        //不仅保存订单还要保存订单项的信息
+        OrderEntity orderEntity = orderService.createAndSaveOrder(vo);
+
+        return Resp.ok(orderEntity);
+    }
 
     /**
      * 列表

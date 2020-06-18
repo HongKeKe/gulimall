@@ -3,7 +3,7 @@
 
 <mapper namespace="com.atguigu.gulimall.oms.dao.OrderDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.atguigu.gulimall.oms.entity.OrderEntity" id="orderMap">
         <result property="id" column="id"/>
         <result property="memberId" column="member_id"/>
@@ -49,5 +49,10 @@
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
+
+    <!--    void updateOrderStatusByOrderSn(OrderEntity order);-->
+    <update id="updateOrderStatusByOrderSn">
+        UPDATE `oms_order` SET `status`=#{status} WHERE `order_sn`=#{orderSn}
+    </update>
 
 </mapper>

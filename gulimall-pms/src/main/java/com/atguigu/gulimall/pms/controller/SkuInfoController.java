@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import com.atguigu.gulimall.commons.bean.Constant;
 import com.atguigu.gulimall.commons.bean.PageVo;
 import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.commons.bean.Resp;
@@ -13,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,9 @@ import com.atguigu.gulimall.pms.service.SkuInfoService;
 public class SkuInfoController {
     @Autowired
     private SkuInfoService skuInfoService;
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
     @GetMapping("/cart/{skuId}")
     public Resp<SkuInfoVo> getSKuInfoForCart(@PathVariable("skuId") Long skuId){
@@ -101,6 +106,15 @@ public class SkuInfoController {
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('pms:skuinfo:update')")
     public Resp<Object> update(@RequestBody SkuInfoEntity skuInfo){
+
+        /**
+         * 清缓存，保证缓存同步
+         */
+
+        Long skuId = skuInfo.getSkuId();
+
+
+        redisTemplate.delete(Constant.CACHE_SKU_INFO+skuId);
 		skuInfoService.updateById(skuInfo);
 
         return Resp.ok(null);

@@ -9,9 +9,9 @@ import com.atguigu.gulimall.commons.bean.QueryCondition;
 /**
  * 运费模板
  *
- * @author hongweijie
- * @email 995765791@qq.com
- * @date 2020-06-10 18:14:17
+ * @author leifengyang
+ * @email lfy@atguigu.com
+ * @date 2019-08-01 20:39:51
  */
 public interface FeightTemplateService extends IService<FeightTemplateEntity> {
 

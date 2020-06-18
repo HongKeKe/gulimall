@@ -12,16 +12,15 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
-@EnableSwagger2
 @Configuration
+@EnableSwagger2
 public class OmsSwaggerConfig {
 
 
-    @Bean("订单平台")
+    @Bean("订单系统")
     public Docket userApis() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("订单平台")
+                .groupName("订单系统")
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .paths(PathSelectors.regex("/oms.*"))
@@ -32,13 +31,10 @@ public class OmsSwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("谷粒商城-订单平台接口文档")
-                .description("提供订单平台的文档")
+                .title("谷粒商城-订单系统接口文档")
+                .description("提供订单系统的文档")
                 .termsOfServiceUrl("http://www.atguigu.com/")
                 .version("1.0")
                 .build();
     }
-
-
-
 }

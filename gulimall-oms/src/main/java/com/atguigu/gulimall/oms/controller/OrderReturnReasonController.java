@@ -22,9 +22,9 @@ import com.atguigu.gulimall.oms.service.OrderReturnReasonService;
 /**
  * 退货原因
  *
- * @author hongweijie
- * @email 995765791@qq.com
- * @date 2020-06-10 17:34:34
+ * @author leifengyang
+ * @email lfy@atguigu.com
+ * @date 2019-08-01 20:33:14
  */
 @Api(tags = "退货原因 管理")
 @RestController

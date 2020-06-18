@@ -25,5 +25,9 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
-
+    <!--    void incrScore(MemberEntity memberEntity);-->
+    <update id="incrScore">
+        UPDATE `ums_member` SET growth = growth+#{growth},integration = integration+#{integration}
+        WHERE id=#{id}
+    </update>
 </mapper>

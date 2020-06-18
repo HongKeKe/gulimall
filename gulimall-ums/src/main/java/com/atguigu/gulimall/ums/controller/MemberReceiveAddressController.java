@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.ums.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -22,9 +23,9 @@ import com.atguigu.gulimall.ums.service.MemberReceiveAddressService;
 /**
  * 会员收货地址
  *
- * @author hongweijie
- * @email 995765791@qq.com
- * @date 2020-06-10 18:12:03
+ * @author leifengyang
+ * @email lfy@atguigu.com
+ * @date 2019-08-01 20:38:09
  */
 @Api(tags = "会员收货地址 管理")
 @RestController
@@ -32,6 +33,16 @@ import com.atguigu.gulimall.ums.service.MemberReceiveAddressService;
 public class MemberReceiveAddressController {
     @Autowired
     private MemberReceiveAddressService memberReceiveAddressService;
+
+
+    @ApiOperation("获取某个用户的所有收货地址")
+    @GetMapping("/member/{memberId}")
+    public Resp<List<MemberReceiveAddressEntity>> memberAddress(@PathVariable("memberId") Long memberId){
+        List<MemberReceiveAddressEntity> memberReceiveAddressEntities = memberReceiveAddressService.getAddressesByMemberId(memberId);
+
+        return Resp.ok(memberReceiveAddressEntities);
+    }
+
 
     /**
      * 列表
@@ -53,7 +64,7 @@ public class MemberReceiveAddressController {
     @GetMapping("/info/{id}")
     @PreAuthorize("hasAuthority('ums:memberreceiveaddress:info')")
     public Resp<MemberReceiveAddressEntity> info(@PathVariable("id") Long id){
-		MemberReceiveAddressEntity memberReceiveAddress = memberReceiveAddressService.getById(id);
+        MemberReceiveAddressEntity memberReceiveAddress = memberReceiveAddressService.getById(id);
 
         return Resp.ok(memberReceiveAddress);
     }
@@ -65,7 +76,7 @@ public class MemberReceiveAddressController {
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('ums:memberreceiveaddress:save')")
     public Resp<Object> save(@RequestBody MemberReceiveAddressEntity memberReceiveAddress){
-		memberReceiveAddressService.save(memberReceiveAddress);
+        memberReceiveAddressService.save(memberReceiveAddress);
 
         return Resp.ok(null);
     }
@@ -77,7 +88,7 @@ public class MemberReceiveAddressController {
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('ums:memberreceiveaddress:update')")
     public Resp<Object> update(@RequestBody MemberReceiveAddressEntity memberReceiveAddress){
-		memberReceiveAddressService.updateById(memberReceiveAddress);
+        memberReceiveAddressService.updateById(memberReceiveAddress);
 
         return Resp.ok(null);
     }
@@ -89,7 +100,7 @@ public class MemberReceiveAddressController {
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('ums:memberreceiveaddress:delete')")
     public Resp<Object> delete(@RequestBody Long[] ids){
-		memberReceiveAddressService.removeByIds(Arrays.asList(ids));
+        memberReceiveAddressService.removeByIds(Arrays.asList(ids));
 
         return Resp.ok(null);
     }

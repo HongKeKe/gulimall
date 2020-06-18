@@ -1,6 +1,9 @@
 package com.atguigu.gulimall.ums.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -17,6 +20,8 @@ import com.atguigu.gulimall.ums.service.MemberReceiveAddressService;
 @Service("memberReceiveAddressService")
 public class MemberReceiveAddressServiceImpl extends ServiceImpl<MemberReceiveAddressDao, MemberReceiveAddressEntity> implements MemberReceiveAddressService {
 
+    @Autowired
+    MemberReceiveAddressDao memberReceiveAddressDao;
     @Override
     public PageVo queryPage(QueryCondition params) {
         IPage<MemberReceiveAddressEntity> page = this.page(
@@ -25,6 +30,16 @@ public class MemberReceiveAddressServiceImpl extends ServiceImpl<MemberReceiveAd
         );
 
         return new PageVo(page);
+    }
+
+
+
+    @Override
+    public List<MemberReceiveAddressEntity> getAddressesByMemberId(Long memberId) {
+
+
+        List<MemberReceiveAddressEntity> addressEntities = memberReceiveAddressDao.selectList(new QueryWrapper<MemberReceiveAddressEntity>().eq("member_id", memberId));
+        return addressEntities;
     }
 
 }

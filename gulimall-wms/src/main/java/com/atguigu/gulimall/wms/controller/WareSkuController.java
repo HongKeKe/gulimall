@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 import com.atguigu.gulimall.commons.bean.PageVo;
 import com.atguigu.gulimall.commons.bean.QueryCondition;
 import com.atguigu.gulimall.commons.bean.Resp;
 import com.atguigu.gulimall.commons.to.SkuStockVo;
+import com.atguigu.gulimall.wms.vo.LockStockVo;
+import com.atguigu.gulimall.wms.vo.SkuLockVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +42,15 @@ public class WareSkuController {
     private WareSkuService wareSkuService;
 
 
+    @ApiOperation("验库存&锁库存")
+    @PostMapping("/checkAndLock")
+    public Resp<LockStockVo> lockAndCheckStock(@RequestBody List<SkuLockVo> skuIds) throws ExecutionException, InterruptedException {
+
+        LockStockVo lockStockVo = wareSkuService.lockAndCheckStock(skuIds);
+
+        return Resp.ok(lockStockVo);
+    }
+
 
     @PostMapping("/skus")
     public Resp<List<SkuStockVo>> skuWareInfos(@RequestBody List<Long> skuIds){
@@ -56,8 +68,8 @@ public class WareSkuController {
         return Resp.ok(vos);
     }
 
+
     ///wms/waresku/sku/1
-    @ApiOperation( "获取某个sku的库存信息")
     @GetMapping("/sku/{skuId}")
     public Resp<List<WareSkuEntity>> skuWareInfos(@PathVariable("skuId")Long skuId){
 
@@ -65,6 +77,7 @@ public class WareSkuController {
 
         return Resp.ok(list);
     }
+
     /**
      * 列表
      */
@@ -85,7 +98,7 @@ public class WareSkuController {
     @GetMapping("/info/{id}")
     @PreAuthorize("hasAuthority('wms:waresku:info')")
     public Resp<WareSkuEntity> info(@PathVariable("id") Long id){
-		WareSkuEntity wareSku = wareSkuService.getById(id);
+        WareSkuEntity wareSku = wareSkuService.getById(id);
 
         return Resp.ok(wareSku);
     }
@@ -97,7 +110,7 @@ public class WareSkuController {
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('wms:waresku:save')")
     public Resp<Object> save(@RequestBody WareSkuEntity wareSku){
-		wareSkuService.save(wareSku);
+        wareSkuService.save(wareSku);
 
         return Resp.ok(null);
     }
@@ -109,7 +122,7 @@ public class WareSkuController {
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('wms:waresku:update')")
     public Resp<Object> update(@RequestBody WareSkuEntity wareSku){
-		wareSkuService.updateById(wareSku);
+        wareSkuService.updateById(wareSku);
 
         return Resp.ok(null);
     }
@@ -121,7 +134,7 @@ public class WareSkuController {
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('wms:waresku:delete')")
     public Resp<Object> delete(@RequestBody Long[] ids){
-		wareSkuService.removeByIds(Arrays.asList(ids));
+        wareSkuService.removeByIds(Arrays.asList(ids));
 
         return Resp.ok(null);
     }
