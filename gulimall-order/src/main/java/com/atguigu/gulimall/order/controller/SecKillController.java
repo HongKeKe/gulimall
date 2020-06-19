@@ -35,13 +35,19 @@ public class SecKillController {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
-
+    /**
+     * 防止支付过快时，订单还没创建
+     * @param request
+     * @param orderSn
+     * @return
+     * @throws InterruptedException
+     */
     @GetMapping("/miaosha/pay")
     public String payKillOrder(HttpServletRequest request,String orderSn) throws InterruptedException {
         //创建闭锁
         RCountDownLatch latch = redisson.getCountDownLatch(Constant.ORDER_QUICK_COUNT_DOWN+orderSn);
 
-        latch.await();
+        latch.await();  //拿着这个闭锁，等着闭锁被释放了，也就是创建订单完成再把这个闭锁释放 latch.ocuntDown()
 
         //下面给我查询；
         //查询到远程订单....

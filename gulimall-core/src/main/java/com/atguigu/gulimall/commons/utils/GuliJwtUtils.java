@@ -67,7 +67,7 @@ public class GuliJwtUtils {
      */
     public static Map<String,Object> getJwtBody(String jwt){
         String substring = jwt.substring(beareaPrefix.length());
-
+        System.out.println("hahhaha");
         return Jwts.parser().setSigningKey(key).parseClaimsJws(substring).getBody();
     }
 
